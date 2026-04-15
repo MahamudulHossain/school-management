@@ -1,0 +1,36 @@
+.required{
+    color: red;
+}
+.help-block{
+    color: red;
+}
+.breadcrumb {
+    margin-bottom: 0rem;
+    padding-top: 0.5rem;
+    padding-right: 1rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+}
+.card{
+    margin-top: 0.5rem;
+}
+.toast-success {
+    background-color: #157347 !important;
+    color: #fff !important;
+}
+.toast-error {
+    background-color: #d9304c !important;
+    color: #fff !important;
+}
+.nav-tabs .nav-link {
+    color: white;
+}
+.nav-tabs .nav-link:hover {
+    color: #000;
+    background-color: #fff;
+}
+.nav-tabs .nav-link.active {
+    color: #000;
+    background-color: #fff;
+}
+
