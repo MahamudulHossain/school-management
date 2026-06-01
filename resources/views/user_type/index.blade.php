@@ -14,7 +14,6 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('supporting/dataTables/bs4/datatables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('supporting/dataTables/fixedHeader.dataTables.min.css') }}">
-    {{--<link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.5/css/fixedHeader.dataTables.min.css">--}}
 
 @endpush
 @section('maincontent')
@@ -51,7 +50,7 @@
                             <th>
                                 Role
                             </th>
-                            <th>
+                            <th class="noprint">
                                 Action
                             </th>
                         </tr>
@@ -124,18 +123,15 @@
 //            dom: '<"html5buttons"B>lTfgtip',
                 'dom': "<'row'<'col-sm-12 col-md-4'l><'col-sm-12 col-md-4'B><'col-sm-12 col-md-4'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
                 columnDefs: [
-//                { targets: [ 0,1,2,3,4, 5, 6, 7, 8, 9 ], className: 'dt-head text-center'  },
-//                { targets: [0,1,2,3,4, 5,6,7 ], className: 'text-center' },
                     {targets: [0, 1, 2, 3], className: 'text-center'},
-//                {targets: [4], className: 'text-right'},
                 ],
 
                 buttons: [
                     {extend: 'copy'},
                     {extend: 'csv'},
                     {
-                        extend: 'excel', title: '{{ config('app.name', 'EIS') }}',
-                        messageTop: ' Role   '
+                        extend: 'excel', title: '{{ config('app.name', 'EISL') }}',
+                        messageTop: ' User Type   '
                     },
                         {{--{extend: 'pdf', title: 'DVL Transaction Data',--}}
                         {{--messageTop: 'Commission Report of {{entryBy($partner_id).' '. $title_date_range}} ',--}}
@@ -148,38 +144,23 @@
                         className: 'btn  btn-sm btn-table',
                         titleAttr: 'Export to Pdf',
                         text: '<span class="fa fa-file-pdf-o fa-lg"></span><i class="hidden-xs hidden-sm hidden-md"> Pdf</i>',
-                        filename: 'Role ',
+                        filename: 'User Type ',
                         extension: '.pdf',
-//                    orientation : 'landscape',
                         orientation: 'portrait',
-                        title: "Role ",
+                        title: "User Type ",
                         footer: true,
                         exportOptions: {
-                            columns: ':visible:not(.not-export-col)',
+                            columns: ':not(.noprint)',
                             orthogonal: "Export-pdf"
                         },
                         customize: function (doc) {
                             var rowCount = doc.content[1].table.body.length;
                             for (i = 1; i < rowCount; i++) {
-
-                                /*var val = document.form1.campo.value;
-                                 if (isNaN(val)){
-                                 alert(‘Il valore inserito non è numerico’);
-                                 } else {
-                                 alert(‘Il valore inserito è numerico’);
-                                 }*/
                                 doc.content[1].table.body[i][0].alignment = 'center';
                                 doc.content[1].table.body[i][1].alignment = 'left';
                                 doc.content[1].table.body[i][2].alignment = 'left';
-                                doc.content[1].table.body[i][3].alignment = 'left';
-//                            doc.content[1].table.body[i][4].alignment = 'right';
-//                            doc.content[1].table.body[i][5].alignment = 'right';
-//                            doc.content[1].table.body[i][6].alignment = 'right';
-//                            doc.content[1].table.body[i][7].alignment = 'left';
-//                            doc.content[1].table.body[i][8].alignment = 'left';
                             }
-                            doc.content[1].table.widths = ['10%', '30%', '50%', '10%'];
-//                        doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                            doc.content[1].table.widths = ['20%', '40%', '40%'];
                             doc.content.splice(0, 1);
                             var now = new Date();
                             var jsDate = now.getDate() + '-' + (now.getMonth() + 1) + '-' + now.getFullYear() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
@@ -203,18 +184,9 @@
                                             margin: [10, 0]
                                         },
                                         {
-                                            //image: logo,
-                                            alignment: 'center',
-                                            width: 20,
-                                            height: 20,
-                                            {{--image: 'data:image/png;base64,{{$settings->logo_base64}}'--}}
-
-                                        },
-
-                                        {
                                             alignment: 'right',
                                             fontSize: 10,
-                                            text: '{{ config('app.name', 'EIS') }}'
+                                            text: '{{ config('app.name', 'EISL') }}'
                                         }
                                     ],
                                     margin: 20
@@ -261,8 +233,12 @@
                     {
                         extend: 'print',
                         footer: true,
-                        messageTop: 'Role  ',
+                        messageTop: 'User Type  ',
                         messageBottom: '{{'Printed On: '.\Carbon\Carbon::now()->format(' D, d-M-Y, h:ia')}}',
+                        exportOptions: {
+                            columns: ':not(.noprint)',
+                            orthogonal: "Export-pdf"
+                        },
                         customize: function (win) {
                             $(win.document.body).addClass('white-bg');
                             $(win.document.body).css('font-size', '10px');

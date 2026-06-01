@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>@yield('title') | {{ config('app.name', 'EIS') }}</title>
+    <meta name="csrf-token" id="token" content="{{ csrf_token() }}">
+    <title>@yield('title') | {{ config('app.name', 'Hossainn') }}</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
 
@@ -87,6 +88,30 @@
             </ul>
             <!-- Right navbar links -->
             <ul class="navbar-nav ms-auto">
+            {{-- Yearwise deopdown --}}
+            <?php
+                $acdemic_years = DB::table('academic_years')->orderBy('id','desc')->pluck('title', 'id')->toArray();
+            ?>
+
+            <li>
+                <div class="btn-group">
+                    <button type="button"
+                            class="btn btn-success">{{ (session()->get('acad_year')!='all')? acadYearInfo(session()->get('acad_year'))->title:'All'}}</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success dropdown-toggle dropdown-icon"
+                                data-toggle="dropdown">
+                        </button>
+                        <div class="dropdown-menu">
+                            @foreach ($acdemic_years as $acad_id => $acad_year)
+                                <a class="dropdown-item"
+                                    href="{{ route('acadYearSwitch', $acad_year) }}">{{$acad_year}}</a>
+                            @endforeach
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ route('acadYearSwitch', 'all') }}">All</a>
+                        </div>
+                    </div>
+                </div>
+            </li>
 
             <!--begin::User Menu Dropdown-->
             <li class="nav-item dropdown user-menu">
@@ -140,10 +165,17 @@
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-@if(Auth::user()->user_type_id<=2)
+    {{-- @dd(Auth::user()->user_type_id) --}}
+@if(Auth::user()->user_type_id == 1)
     @include('layouts.sidebar')
-@else
-    @include('layouts.sidebar_sc')
+@elseif (Auth::user()->user_type_id == 2)
+    @include('layouts.sidebar_student')
+@elseif (Auth::user()->user_type_id == 3)
+    @include('layouts.sidebar_teacher')
+@elseif (Auth::user()->user_type_id == 4)
+    @include('layouts.sidebar_employee')
+@elseif (Auth::user()->user_type_id == 5)
+    @include('layouts.sidebar_guardian')
 @endif
 
 
@@ -160,9 +192,9 @@
 
     <footer class="app-footer">
         <div class="float-right d-none d-sm-inline">
-            <b>Powered By : </b><a href="https://www.hossainn.com" target="_blank">Hossainn</a>
+            <b>Powered By : </b><a href="https://www.Hossainn.com" target="_blank">Hossainn</a>
         </div>
-        <strong>Copyright &copy; 2020-<?php echo date('Y'); ?> <a href="#">{{ config('app.name', 'HOSSAINN') }} </a> .
+        <strong>Copyright &copy; 2020-<?php echo date('Y'); ?> <a href="#">{{ config('app.name', 'Hossainn') }} </a> .
         </strong> All rights
         reserved.
     </footer>
@@ -186,6 +218,9 @@
 
 <!-- jQuery -->
 <script src="{!! asset('alte4/plugins/jquery/jquery.min.js')!!}" type="text/javascript"></script>
+<script src="{!! asset('alte4/plugins/jquery-ui/jquery-ui.min.js')!!}" type="text/javascript"></script>
+<link href="{!! asset('alte4/plugins/jquery-ui/jquery-ui.min.css')!!}" rel="stylesheet">
+{{-- <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script> --}}
 <!-- Bootstrap 4 -->
 <script src="{!! asset('alte4/plugins/bootstrap/js/bootstrap.bundle.min.js')!!}" type="text/javascript"></script>
 {{--<script src="https://cdn.usebootstrap.com/bootstrap/4.1.1/js/bootstrap.min.js" type="text/javascript"></script>--}}
@@ -195,6 +230,7 @@
 <!-- AdminLTE for demo purposes -->
 
 <script type="text/javascript" src="{{ asset('supporting/toastr/toastr.min.js') }}"></script>
+
 
 
 @stack('js')

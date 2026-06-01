@@ -1,0 +1,474 @@
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+        <!--begin::Sidebar Brand-->
+        <div class="sidebar-brand">
+          <!--begin::Brand Link-->
+          <a href="{{ url('/dashboard') }}" class="brand-link">
+            <span class="brand-text fw-light">AdminLTE 4</span>
+            <!--end::Brand Text-->
+          </a>
+          <!--end::Brand Link-->
+        </div>
+        <!--end::Sidebar Brand-->
+        <!--begin::Sidebar Wrapper-->
+        <div class="sidebar-wrapper">
+          <nav class="mt-2">
+            <!--begin::Sidebar Menu-->
+            <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation" aria-label="Main navigation" data-accordion="false" id="navigation">
+                <li class="nav-item @yield('dashboard_mo')">
+                    <a href="{{ url('dashboard') }}" class="nav-link @yield('dashboard')">
+                        <i class="nav-icon bi bi-speedometer"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+
+                <li class="nav-item @yield('academic_mo')">
+                    <a href="#" class="nav-link @yield('academic')">
+                        <i class="nav-icon fa fa-university"></i>
+                        <p>
+                            Academic Settings
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview" style="margin-left: 15px">
+                        @can('ClassAccess')
+                            <li class="nav-item @yield('class_mo')">
+                                <a href="#" class="nav-link @yield('class')">
+                                    <i class="nav-icon fa fa-map-signs"></i>
+                                    <p>
+                                        Class
+                                        <i class="nav-arrow bi bi-chevron-right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview ml-3" style="margin-left: 15px">
+                                    @can('ClassCreate')
+                                        <li class="nav-item">
+                                            <a href="{{ url('schoolClass/create') }}" class="nav-link @yield('add_class')">
+                                                <i class="nav-icon bi bi-circle"></i>
+                                                <p>Add Class</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('ClassAccess')
+                                    <li class="nav-item">
+                                        <a href="{{ url('schoolClass') }}" class="nav-link @yield('manage_class')">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Manage Class</p>
+                                        </a>
+                                    </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcan
+                        @can('SectionAccess')
+                            <li class="nav-item @yield('section_mo')">
+                                <a href="#" class="nav-link @yield('section')">
+                                    <i class="nav-icon fa fa-sitemap"></i>
+                                    <p>
+                                        Section
+                                        <i class="nav-arrow bi bi-chevron-right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview ml-3" style="margin-left: 15px">
+                                    @can('SectionCreate')
+                                        <li class="nav-item">
+                                            <a href="{{ url('schoolSection/create') }}" class="nav-link @yield('add_section')">
+                                                <i class="nav-icon bi bi-circle"></i>
+                                                <p>Add Section</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('SectionAccess')
+                                    <li class="nav-item">
+                                        <a href="{{ url('schoolSection') }}" class="nav-link @yield('manage_section')">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Manage Section</p>
+                                        </a>
+                                    </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcan
+                        @can('AcademicYearAccess')
+                            <li class="nav-item @yield('academic_year_mo')">
+                                <a href="#" class="nav-link @yield('academic_year')">
+                                    <i class="nav-icon fa fa-calendar-check"></i>
+                                    <p>
+                                        Academic Year
+                                        <i class="nav-arrow bi bi-chevron-right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview ml-3" style="margin-left: 15px">
+                                    @can('AcademicYearCreate')
+                                        <li class="nav-item">
+                                            <a href="{{ url('academicYear/create') }}" class="nav-link @yield('add_academic_year')">
+                                                <i class="nav-icon bi bi-circle"></i>
+                                                <p>Add Academic Year</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('AcademicYearAccess')
+                                    <li class="nav-item">
+                                        <a href="{{ url('academicYear') }}" class="nav-link @yield('manage_academic_year')">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Manage Academic Year</p>
+                                        </a>
+                                    </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcan
+                        @can('TermAccess')
+                            <li class="nav-item @yield('term_mo')">
+                                <a href="#" class="nav-link @yield('term')">
+                                    <i class="nav-icon fa fa-tasks"></i>
+                                    <p>
+                                        Term/Semester
+                                        <i class="nav-arrow bi bi-chevron-right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview ml-3" style="margin-left: 15px">
+                                    @can('TermCreate')
+                                        <li class="nav-item">
+                                            <a href="{{ url('term/create') }}" class="nav-link @yield('add_term')">
+                                                <i class="nav-icon bi bi-circle"></i>
+                                                <p>Add Term</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('TermAccess')
+                                    <li class="nav-item">
+                                        <a href="{{ url('term') }}" class="nav-link @yield('manage_term')">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Manage Term</p>
+                                        </a>
+                                    </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcan
+                        @can('SubjectAccess')
+                            <li class="nav-item @yield('subject_mo')">
+                                <a href="#" class="nav-link @yield('subject')">
+                                    <i class="nav-icon fas fa-book"></i>
+                                    <p>
+                                        Subject
+                                        <i class="nav-arrow bi bi-chevron-right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview ml-3" style="margin-left: 15px">
+                                    @can('SubjectCreate')
+                                        <li class="nav-item">
+                                            <a href="{{ url('subject/create') }}" class="nav-link @yield('add_subject')">
+                                                <i class="nav-icon bi bi-circle"></i>
+                                                <p>Add Subject</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('SubjectAccess')
+                                    <li class="nav-item">
+                                        <a href="{{ url('subject') }}" class="nav-link @yield('manage_subject')">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Manage Subject</p>
+                                        </a>
+                                    </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+
+                <li class="nav-item @yield('teacher_mo')">
+                    <a href="#" class="nav-link @yield('teacher')">
+                        <i class="nav-icon fas fa-user-tie"></i>
+                        <p>
+                            Teacher
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @can('TeacherPresenceCreate')
+                            <li class="nav-item">
+                                <a href="{{ url('teacher_presence/create') }}" class="nav-link @yield('teacher_presence')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Daily Attendance</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('TeacherAttendance')
+                            <li class="nav-item">
+                                <a href="{{ url('teacher_presence') }}" class="nav-link @yield('teacher_manage_attendance')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Manage Attendance</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('TeacherAttendanceReportAccess')
+                            <li class="nav-item">
+                                <a href="{{ url('teacher_presence_report') }}" class="nav-link @yield('teacher_presence_report')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Attendance Report</p>
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+
+                <li class="nav-item @yield('student_mo')">
+                    <a href="#" class="nav-link @yield('student')">
+                        <i class="nav-icon fas fa-user-graduate"></i>
+                        <p>
+                            Student
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @can('StudentCreate')
+                            <li class="nav-item">
+                                <a href="{{ url('student-create') }}" class="nav-link @yield('add_student')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Admit Student</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('StudentAccess')
+                            <li class="nav-item">
+                                <a href="{{ url('student') }}" class="nav-link @yield('manage_student')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Manage Student</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('StudentPromotion')
+                            <li class="nav-item">
+                                <a href="{{ url('promotion-select') }}" class="nav-link @yield('promotion')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Student Promotion</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('StudentAttendance')
+                            <li class="nav-item">
+                                <a href="{{ url('student-attendance-select') }}" class="nav-link @yield('student_attendance')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Daily Attendance</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('StudentAttendance')
+                            <li class="nav-item">
+                                <a href="{{ url('student-attendance-edit-select') }}" class="nav-link @yield('student_attendance_edit')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Modify Attendance</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('StudentAttendanceReportAccess')
+                            <li class="nav-item">
+                                <a href="{{ url('student-attendance-report') }}" class="nav-link @yield('student_presence_report')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Attendance Report</p>
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+
+                <li class="nav-item @yield('attendant_mo')">
+                    <a href="#" class="nav-link @yield('attendant')">
+                        <i class="nav-icon fa fa-user-circle"></i>
+                        <p>
+                            Attendant
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @can('ManageAttendant')
+                            <li class="nav-item">
+                                <a href="{{ url('attendant/create') }}" class="nav-link @yield('add_attendant')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Create Attendant</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('ManageAttendant')
+                            <li class="nav-item">
+                                <a href="{{ url('attendant') }}" class="nav-link @yield('manage_attendant')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Manage Attendant</p>
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+
+                <li class="nav-item @yield('timetable_mo')">
+                    <a href="#" class="nav-link @yield('timetable')">
+                        <i class="nav-icon fa fa-map"></i>
+                        <p>
+                            Timetable
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @can('ClassRoutineViewAccess')
+                            <li class="nav-item">
+                                <a href="{{ route('class-routine.index') }}" class="nav-link @yield('view_class_timetable')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>View Routine</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('ClassRoutineAccess')
+                            <li class="nav-item">
+                                <a href="{{ url('class-routine-select') }}" class="nav-link @yield('class_timetable')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Create/Modify Routine</p>
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+
+                <li class="nav-item @yield('leave_mo')">
+                    <a href="#" class="nav-link @yield('leave')">
+                        <i class="nav-icon fa fa-plane"></i>
+                        <p>
+                            Leave
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @can('CreateLeave')
+                            <li class="nav-item">
+                                <a href="{{ url('leave-track/create') }}" class="nav-link @yield('add_leave')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Add Leave</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('ManageLeave')
+                            <li class="nav-item">
+                                <a href="{{ url('leave-track') }}" class="nav-link @yield('list_leave')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Manage Leave</p>
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+
+                <li class="nav-item @yield('notice_mo')">
+                    <a href="#" class="nav-link @yield('notice')">
+                        <i class="nav-icon fa fa-comments"></i>
+                        <p>
+                            Notice
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @can('CreateNotice')
+                            <li class="nav-item">
+                                <a href="{{ url('notice/create') }}" class="nav-link @yield('add_notice')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Add Notice</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('ManageNotice')
+                            <li class="nav-item">
+                                <a href="{{ url('notice') }}" class="nav-link @yield('list_notice')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Manage Notice</p>
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+
+                <li class="nav-item @yield('exam_mo')">
+                    <a href="#" class="nav-link @yield('exam')">
+                        <i class="nav-icon fa fa-graduation-cap"></i>
+                        <p>
+                            Exam & Marks
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @can('ManageGradingSystem')
+                            <li class="nav-item">
+                                <a href="{{ url('grading') }}" class="nav-link @yield('grading')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Manage Grading System</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('ManageExamType')
+                            <li class="nav-item">
+                                <a href="{{ url('exam-type') }}" class="nav-link @yield('examtype')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Manage Exam Type</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('ManageExamMarks')
+                            <li class="nav-item">
+                                <a href="{{ url('exam-manage-marks') }}" class="nav-link @yield('manage_marks')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Input/Modify Marks</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('ManageExamMarksCheck')
+                            <li class="nav-item">
+                                <a href="{{ url('exam-marks-check') }}" class="nav-link @yield('manage_marks_check')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Input Marks Check</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('ManageExamReport')
+                            <li class="nav-item">
+                                <a href="{{ url('exam-report') }}" class="nav-link @yield('manage_exam_report')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Exam Report</p>
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+
+                <li class="nav-item @yield('event_mo')">
+                    <a href="#" class="nav-link @yield('event')">
+                        <i class="nav-icon fa fa-calendar"></i>
+                        <p>
+                            Events & Holidays
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @can('ManageEvents')
+                            <li class="nav-item">
+                                <a href="{{ url('event-holiday') }}" class="nav-link @yield('manage_event')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Manage Events & Holidays</p>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('ViewEvents')
+                            <li class="nav-item">
+                                <a href="{{ url('event-calendar') }}" class="nav-link @yield('view_event')">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>View Events</p>
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+
+            </ul>
+            <!--end::Sidebar Menu-->
+          </nav>
+        </div>
+        <!--end::Sidebar Wrapper-->
+      </aside>

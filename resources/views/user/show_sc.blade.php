@@ -32,12 +32,25 @@
                     <div class="card">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
-                                <li class="nav-item"><a class="nav-link active" href="#about"
-                                                        data-toggle="tab">About</a></li>
+                                <li class="nav-item"><a class="nav-link active" href="#about" data-toggle="tab">About</a></li>
+                                @if(in_array($user->user_type_id, [2,3,4]))
+                                <li class="nav-item"><a class="nav-link" href="#personal" data-toggle="tab">Personal Info</a></li>
+                                @endif
+                                @if($user->user_type_id == 2)
+                                <li class="nav-item"><a class="nav-link" href="#academic" data-toggle="tab">Academic</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#guardian" data-toggle="tab">Guardian</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#attendant" data-toggle="tab">Attendant</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#routine" data-toggle="tab">Routine</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#ledger" data-toggle="tab">Ledger</a></li>
+                                @endif
+                                @if ($user->user_type_id == 5)
+                                    <li class="nav-item"><a class="nav-link" href="#dependents" data-toggle="tab">Dependents</a></li>
+                                @endif
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
                             <div class="tab-content">
+
                                 <div class="active tab-pane" id="about">
 
                                     <div class="card-body">
@@ -60,6 +73,28 @@
                                         <hr>
                                     </div>
                                 </div>
+
+                                @if($user->user_type_id == 2) {{-- Student --}}
+                                    @include('students.personal_profile_show')
+                                    @include('students.academic_info_show')
+                                    @include('students.guardian_profile_show')
+                                    @include('students.attendant_profile_show')
+                                    @include('students.routine')
+                                    @include('students.ledger')
+                                @endif
+
+                                @if($user->user_type_id == 3) {{-- Teacher --}}
+                                    @include('teachers.personal_profile_show')
+                                @endif
+
+                                @if($user->user_type_id == 4) {{-- Employee --}}
+                                    @include('employees.personal_profile_show')
+                                @endif
+
+                                @if($user->user_type_id == 5) {{-- Guardian --}}
+                                    @include('guardians.dependents')
+                                @endif
+
                             </div>
                             <!-- /.tab-content -->
                         </div><!-- /.card-body -->
@@ -75,10 +110,6 @@
 @push('js')
 <!-- InputMask for Date picker-->
 <script src="{!! asset('alte4/plugins/inputmask/min/jquery.inputmask.bundle.min.js')!!}"></script>
-
-<!-- Tempusdominus Bootstrap 4 -->
-{{--<script--}}
-        {{--src="{!! asset('alte305/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')!!}"></script>--}}
 <script src={!! asset('supporting/bootstrap-fileinput/bootstrap-fileinput.js')!!} type="text/javascript"></script>
 <script src="{{ asset('supporting/dataTables/bs4/datatables.min.js')}}"></script>
 <script src="{{ asset('supporting/dataTables/dataTables.fixedHeader.min.js')}}"></script>

@@ -16,18 +16,12 @@
 @endcan
 @can('UserDelete')
 <li style="text-align: center">
-        {!! Form::open([
-            'method'=>'DELETE',
-            'url' => ['user', $row_id],
-            'style' => 'display:inline'
-        ]) !!}
-        {!! Form::button('<span class="fa fa-trash " aria-hidden="true" title="Delete" />', array(
-                'type' => 'submit',
-                'class' => 'btn btn-danger btn-sm',
-                'style' => ' margin:5px',
-                'title' => 'Delete',
-                'onclick'=>'return confirm("Confirm delete?")'
-        ))!!}
-        {!! Form::close() !!}
+        <form action="{{ url('user/' . $row_id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger btn-sm" title="Delete" style="margin-top: 5px">
+                <span class="fa fa-trash" aria-hidden="true" title="Delete"></span>
+            </button>
+        </form>
 </li>
 @endcan

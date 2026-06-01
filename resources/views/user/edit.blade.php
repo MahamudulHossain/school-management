@@ -34,7 +34,6 @@
                                 {{--<img class="profile-user-img img-fluid img-circle"--}}
                                 {{--src="{!! asset('alte305/dist/img/user4-128x128.jpg')!!}"--}}
                                 {{--alt="User profile picture">--}}
-
                                 @if($user->imageprofile->image=='default_image.png' && $user->profile->gender=='Male')
                                     <img src="{!! asset( 'storage/images/avatar_male'.'.jpg'. '?'. 'time='. time()) !!}"
                                          class="profile-user-img img-fluid img-circle">
@@ -45,6 +44,9 @@
                                 @elseif($user->imageprofile->image=='default_image.png' && Auth::user()->profile->gender==null)
                                     <img src="{!! asset('storage/images/eisLogoTFoutline.png')!!}"
                                          class="profile-user-img img-fluid img-circle" alt="User Image">
+                                @elseif ($user->imageprofile->image=='default_image.png')
+                                    <img src="{!! asset( 'storage/images/avatar_male'.'.jpg'. '?'. 'time='. time()) !!}"
+                                        class="profile-user-img img-fluid img-circle">
                                 @else
                                     <img
                                             src="{!! asset( 'storage/image_profile/'. $user->imageprofile->image. '?'. 'time='. time()) !!}"
@@ -103,173 +105,202 @@
                     <div class="card">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
-                                <li class="nav-item"><a class="nav-link active" href="#profile" data-toggle="tab">Profile</a>
-                                </li>
+                                @if($user->user_type_id == 2)
+                                    <li class="nav-item"><a class="nav-link active" href="#personal" data-toggle="tab">Personal</a>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link" href="#academic" data-toggle="tab">Academic</a>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link" href="#guardian" data-toggle="tab">Guardian</a>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link" href="#attendant" data-toggle="tab">Attendant</a>
+                                    </li>
+
+                                @elseif(in_array($user->user_type_id, [3,4]))
+                                    <li class="nav-item"><a class="nav-link active" href="#personal" data-toggle="tab">Personal</a>
+                                    </li>
+                                @endif
+
+                                @if (in_array($user->user_type_id, [1,2,3,4]))
+                                    <li class="nav-item"><a class="nav-link {{ $user->user_type_id == 1 ? 'active' : '' }}" href="#profile" data-toggle="tab">Profile</a>
+                                    </li>
+                                @endif
+
+                                @if($user->user_type_id == 5)
+                                    <li class="nav-item"><a class="nav-link active" href="#g_guardian" data-toggle="tab">Guardian</a>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link" href="#guardian_profile" data-toggle="tab">Profile</a>
+                                    </li>
+                                @endif
+
+
                                 <li class="nav-item"><a class="nav-link" href="#avatar" data-toggle="tab">Avatar</a>
                                 </li>
                                 <li class="nav-item"><a class="nav-link" href="#sign" data-toggle="tab">Sign</a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">System
-                                        Settings</a>
-                                </li>
+                                @if($user->user_type_id == 1 || Auth::user()->user_type_id == 1)
+                                    <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">System
+                                            Settings</a>
+                                    </li>
+                                @endif
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
                             <div class="tab-content">
-                                <div class="active tab-pane" id="profile">
-                                    <form action="{{ route('profile.update', $user->profile->id) }}" method="POST" class="saveForm">
-                                    @method('PATCH')
-                                    @csrf
-                                    <div class="card-body">
-                                        <div
-                                                class="form-group row mb-3{{ $errors->has('joining_date') ? ' has-error' : '' }}">
-                                            <label class="col-md-4 control-label text-md-right">Joining Date : <span
-                                                        class="required"> * </span></label>
-                                            <div class="col-md-6 input-group date" id="joining_date"
-                                                 data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input"
-                                                       name="joining_date"
-                                                       value="{{ Carbon\Carbon::parse($user->profile->joining_date)->format('d-m-Y') }}"
-                                                       data-target="#joining_date"/>
-                                                <div class="input-group-append" data-target="#joining_date"
-                                                     data-toggle="datetimepicker">
-                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                @if($user->user_type_id == 2)
+                                    @include('students.personal_profile')
+                                    @include('students.academic_info')
+                                    @include('students.guardian_profile')
+                                    @include('students.attendant_profile')
+                                @elseif($user->user_type_id == 3)
+                                    @include('teachers.personal_profile')
+                                @elseif($user->user_type_id == 4)
+                                    @include('employees.personal_profile')
+                                @endif
+
+                                @if(in_array($user->user_type_id, [1,2,3,4]))
+                                    <div class="tab-pane  @if ($user->user_type_id == 1) active @endif" id="profile">
+                                        <form action="{{ route('profile.update', $user->profile->id) }}" method="POST" class="saveForm">
+                                        @method('PATCH')
+                                        @csrf
+                                        <div class="card-body">
+                                            <div
+                                                    class="form-group row mb-3{{ $errors->has('joining_date') ? ' has-error' : '' }}">
+                                                <label class="col-md-4 control-label text-md-right">Joining Date : <span
+                                                            class="required"> * </span></label>
+                                                <div class="col-md-6 input-group date" id="joining_date"
+                                                    data-target-input="nearest">
+                                                    <input type="text" class="form-control datetimepicker-input"
+                                                        name="joining_date"
+                                                        value="{{ Carbon\Carbon::parse($user->profile->joining_date)->format('d-m-Y') }}"
+                                                        data-target="#joining_date" readonly/>
+                                                    <div class="input-group-append" data-target="#joining_date"
+                                                        data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            @if ($errors->has('joining_date'))
-                                                <span class="help-block">
-                                        <strong>{{ $errors->first('joining_date') }}</strong>
-                                                </span>
-                                            @endif
-
-                                        </div>
-                                        <div
-                                                class="form-group row mb-3{{ $errors->has('date_of_birth') ? ' has-error' : '' }}">
-                                            <label class="col-md-4 control-label text-md-right">Date of Birth : </label>
-                                            <div class="col-md-6 input-group date" id="date_of_birth"
-                                                 data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input"
-                                                       name="date_of_birth"
-                                                       value="{{ ($user->profile->date_of_birth!=null)? Carbon\Carbon::parse($user->profile->date_of_birth)->format('d-m-Y'):'' }}"
-                                                       data-target="#date_of_birth"/>
-                                                <div class="input-group-append" data-target="#date_of_birth"
-                                                     data-toggle="datetimepicker">
-                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                </div>
-                                            </div>
-                                            @if ($errors->has('date_of_birth'))
-                                                <span class="help-block">
-                                        <strong>{{ $errors->first('date_of_birth') }}</strong>
-                                    </span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group row mb-3{{ $errors->has('gender') ? ' has-error' : '' }}">
-                                            <label class="col-md-4 control-label text-md-right">Gender:<span
-                                                        class="required"> * </span></label>
-                                            <div class=" col-md-6 mt-radio-inline">
-                                                <label class="mt-radio">
-                                                    <input type="radio" name="gender"
-                                                           value="Male" {{ ($user->profile->gender=="Male")? "checked" : "" }} >Male
-                                                    <span> </span>
-                                                </label>
-                                                <label class="mt-radio">
-                                                    <input type="radio" name="gender"
-                                                           value="Female" {{ ($user->profile->gender=="Female")? "checked" : "" }} >Female
-                                                    <span> </span>
-                                                </label>
-                                                <label class="mt-radio">
-                                                    <input type="radio" name="gender"
-                                                           value="Others" {{ ($user->profile->gender=="Others")? "checked" : "" }} >Others
-                                                    <span> </span>
-                                                </label>
-                                            </div>
-                                            @if ($errors->has('gender'))
-                                                <span class="help-block">
-                                        <strong>{{ $errors->first('gender') }}</strong>
-                                    </span>
-                                            @endif
-                                        </div>
-
-                                        <div class="form-group row mb-3{{ $errors->has('nid') ? ' has-error' : '' }}">
-                                            <label for="nid" class="col-md-4 control-label text-md-right">NID Number
-                                                (Unique) : </label>
-                                            <div class="col-md-6">
-                                                <input id="nid" type="text" class="form-control input-circle" name="nid"
-                                                       value="{{ $user->profile->nid }}" placeholder="Enter unique NID">
-                                                @if ($errors->has('nid'))
+                                                @if ($errors->has('joining_date'))
                                                     <span class="help-block">
-                                        <strong>{{ $errors->first('nid') }}</strong>
-                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row mb-3{{ $errors->has('contact_no1') ? ' has-error' : '' }}">
-                                            <label for="contact_no1" class="col-md-4 control-label text-right">Contact
-                                                No1: </label>
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" name="contact_no1"
-                                                       value="{{ ($user->profile)?$user->profile->contact_no1:'' }}"
-                                                       {{--value="{{ $user->profile->company_name->contact_no1 }}"--}}
-                                                       autocomplete="false"
-                                                       placeholder="Contact No" onfocus="true">
-                                                @if ($errors->has('contact_no1'))
-                                                    <span class="help-block">
-                                                        <strong>{{ $errors->first('contact_no1') }}</strong>
+                                            <strong>{{ $errors->first('joining_date') }}</strong>
                                                     </span>
                                                 @endif
-                                            </div>
-                                        </div>
 
-                                        <div class="form-group row mb-3{{ $errors->has('contact_no2') ? ' has-error' : '' }}">
-                                            <label for="contact_no2" class="col-md-4 control-label text-right">Contact
-                                                No2: </label>
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" name="contact_no2"
-                                                       value="{{ ($user->profile)?$user->profile->contact_no2:'' }}"
-                                                       {{--value="{{ $user->profile->company_name->contact_no2 }}"--}}
-                                                       autocomplete="false"
-                                                       placeholder="Contact No" onfocus="true">
-                                                @if ($errors->has('contact_no2'))
+                                            </div>
+                                            <div
+                                                    class="form-group row mb-3{{ $errors->has('date_of_birth') ? ' has-error' : '' }}">
+                                                <label class="col-md-4 control-label text-md-right">Date of Birth : </label>
+                                                <div class="col-md-6 input-group date" id="date_of_birth"
+                                                    data-target-input="nearest">
+                                                    <input type="text" class="form-control datetimepicker-input"
+                                                        name="date_of_birth"
+                                                        value="{{ ($user->profile->date_of_birth!=null)? Carbon\Carbon::parse($user->profile->date_of_birth)->format('d-m-Y'):'' }}"
+                                                        data-target="#date_of_birth"/>
+                                                    <div class="input-group-append" data-target="#date_of_birth"
+                                                        data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
+                                                </div>
+                                                @if ($errors->has('date_of_birth'))
                                                     <span class="help-block">
-                                                        <strong>{{ $errors->first('contact_no2') }}</strong>
-                                                    </span>
+                                            <strong>{{ $errors->first('date_of_birth') }}</strong>
+                                        </span>
                                                 @endif
                                             </div>
-                                        </div>
-
-                                        <div class="form-group row mb-3{{ $errors->has('address') ? ' has-error' : '' }}">
-                                            <label for="address" class="col-md-4 control-label text-right">Address
-                                                Line1:
-                                                <span
-                                                        class="required"> * </span></label>
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" name="address"
-                                                       value="{{ ($user->profile)?$user->profile->address:'' }}"
-                                                       autocomplete="false"
-                                                       placeholder="Address Line 1" required onfocus="true">
-                                                @if ($errors->has('address'))
+                                            <div class="form-group row mb-3{{ $errors->has('gender') ? ' has-error' : '' }}">
+                                                <label class="col-md-4 control-label text-md-right">Gender:<span
+                                                            class="required"> * </span></label>
+                                                <div class=" col-md-6 mt-radio-inline">
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="gender"
+                                                            value="Male" {{ ($user->profile->gender=="Male")? "checked" : "" }} >Male
+                                                        <span> </span>
+                                                    </label>
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="gender"
+                                                            value="Female" {{ ($user->profile->gender=="Female")? "checked" : "" }} >Female
+                                                        <span> </span>
+                                                    </label>
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="gender"
+                                                            value="Others" {{ ($user->profile->gender=="Others")? "checked" : "" }} >Others
+                                                        <span> </span>
+                                                    </label>
+                                                </div>
+                                                @if ($errors->has('gender'))
                                                     <span class="help-block">
-                                        <strong>{{ $errors->first('address') }}</strong>
-                                    </span>
+                                            <strong>{{ $errors->first('gender') }}</strong>
+                                        </span>
                                                 @endif
                                             </div>
+
+                                            <div class="form-group row mb-3{{ $errors->has('nid') ? ' has-error' : '' }}">
+                                                <label for="nid" class="col-md-4 control-label text-md-right">NID Number
+                                                    (Unique) : </label>
+                                                <div class="col-md-6">
+                                                    <input id="nid" type="text" class="form-control input-circle" name="nid"
+                                                        value="{{ $user->profile->nid }}" placeholder="Enter unique NID">
+                                                    @if ($errors->has('nid'))
+                                                        <span class="help-block">
+                                            <strong>{{ $errors->first('nid') }}</strong>
+                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-3{{ $errors->has('contact_no1') ? ' has-error' : '' }}">
+                                                <label for="contact_no1" class="col-md-4 control-label text-right">Contact
+                                                    No1: </label>
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" name="contact_no1"
+                                                        value="{{ ($user->profile)?$user->profile->contact_no1:'' }}"
+                                                        {{--value="{{ $user->profile->company_name->contact_no1 }}"--}}
+                                                        autocomplete="false"
+                                                        placeholder="Contact No" onfocus="true">
+                                                    @if ($errors->has('contact_no1'))
+                                                        <span class="help-block">
+                                                            <strong>{{ $errors->first('contact_no1') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-3{{ $errors->has('contact_no2') ? ' has-error' : '' }}">
+                                                <label for="contact_no2" class="col-md-4 control-label text-right">Contact
+                                                    No2: </label>
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" name="contact_no2"
+                                                        value="{{ ($user->profile)?$user->profile->contact_no2:'' }}"
+                                                        {{--value="{{ $user->profile->company_name->contact_no2 }}"--}}
+                                                        autocomplete="false"
+                                                        placeholder="Contact No" onfocus="true">
+                                                    @if ($errors->has('contact_no2'))
+                                                        <span class="help-block">
+                                                            <strong>{{ $errors->first('contact_no2') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
                                         </div>
+
+                                        {{--<div class="card-footer">--}}
+                                        <a href="{{ url()->previous() }}" class="btn btn-outline-primary"><i
+                                                    class="fa fa-arrow-left"
+                                                    aria-hidden="true"></i>{{ __('all_settings.Back') }}</a>
+                                        <button type="submit" class="btn btn-success float-right" id="saveButton"><i
+                                                    class="fa fa-save"
+                                                    aria-hidden="true"></i> Save
+                                        </button>
+                                        {{--</div>--}}
+                                        </form>
 
                                     </div>
+                                @endif
 
-                                    {{--<div class="card-footer">--}}
-                                    <a href="{{ url()->previous() }}" class="btn btn-outline-primary"><i
-                                                class="fa fa-arrow-left"
-                                                aria-hidden="true"></i>{{ __('all_settings.Back') }}</a>
-                                    <button type="submit" class="btn btn-success float-right" id="saveButton"><i
-                                                class="fa fa-save"
-                                                aria-hidden="true"></i> Save
-                                    </button>
-                                    {{--</div>--}}
-                                    </form>
+                                @if($user->user_type_id == 5)
+                                    @include('guardians.personal_profile')
+                                    @include('guardians.profile')
+                                @endif
 
-                                </div>
                                 <div class="tab-pane" id="avatar">
                                     <form action="{{ route('imageprofile.update', $user->imageprofile->id) }}" method="POST" class="saveFrom" enctype="multipart/form-data">
                                     @method('PATCH')
@@ -306,11 +337,11 @@
                                                 <div class="fileinput-preview fileinput-exists thumbnail"
                                                      style="max-width: 200px; max-height: 200px;"></div>
                                                 <div>
-                                <span class="btn btn-default btn-file">
-                                    <span class="fileinput-new"> Select Avatar </span>
-                                    <span class="fileinput-exists"> Change </span>
-                                    <input type="file" name="image" class="form-control" required>
-                                </span>
+                                    <span class="btn btn-default btn-file">
+                                        <span class="fileinput-new"> Select Avatar </span>
+                                        <span class="fileinput-exists"> Change </span>
+                                        <input type="file" name="image" class="form-control" required>
+                                    </span>
                                                     <a href="javascript:;" class="btn btn-default fileinput-exists"
                                                        data-dismiss="fileinput"> Remove </a>
                                                 </div>
@@ -366,11 +397,11 @@
                                                 <div class="fileinput-preview fileinput-exists thumbnail"
                                                      style="max-width: 210px; max-height: 70px;"></div>
                                                 <div>
-                                <span class="btn btn-default btn-file">
-                                    <span class="fileinput-new"> Select Sign </span>
-                                    <span class="fileinput-exists"> Change </span>
-                                    <input type="file" name="sign" class="form-control" required>
-                                </span>
+                                        <span class="btn btn-default btn-file">
+                                            <span class="fileinput-new"> Select Sign </span>
+                                            <span class="fileinput-exists"> Change </span>
+                                            <input type="file" name="sign" class="form-control" required>
+                                        </span>
                                                     <a href="javascript:;" class="btn btn-default fileinput-exists"
                                                        data-dismiss="fileinput"> Remove </a>
                                                 </div>
@@ -408,151 +439,275 @@
 
                                     <div class="card-body">
 
-                                        <div class="form-group row mb-3{{ $errors->has('name') ? ' has-error' : '' }}">
-                                            <label for="name" class="col-md-4 control-label text-md-right">Full Name :
-                                                <span class="required"> * </span></label>
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" name="name"
-                                                       value="{{ old('name', isset($user) ? $user->name : '') }}"
-                                                       autocomplete="false"
-                                                       placeholder="User Name" required onfocus="true">
-                                                @if ($errors->has('name'))
+                                        @if($user->user_type_id == 1)
+                                            <div class="form-group row mb-3{{ $errors->has('name') ? ' has-error' : '' }}">
+                                                <label for="name" class="col-md-4 control-label text-md-right">Full Name :
+                                                    <span class="required"> * </span></label>
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" name="name"
+                                                        value="{{ old('name', isset($user) ? $user->name : '') }}"
+                                                        autocomplete="false"
+                                                        placeholder="User Name" required onfocus="true">
+                                                    @if ($errors->has('name'))
+                                                        <span class="help-block">
+                                                            <strong>{{ $errors->first('name') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3{{ $errors->has('cell_phone') ? ' has-error' : '' }}">
+                                                <label for="cell_phone" class="col-md-4 control-label text-right">Mobile
+                                                    Number :
+                                                    <span class="required"> ** </span></label>
+                                                <div class="col-md-6">
+                                                    <input type="text" name="cell_phone" class="form-control"
+                                                        value="{{ old('cell_phone', isset($user) ? $user->cell_phone : '') }}"
+                                                        placeholder="cell phone number" pattern="^\+?[1-9][0-9]{6,14}$"
+                                                        maxlength="14">
+                                                    {{-- Format indication message --}}
                                                     <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div
-                                                class="form-group row mb-3{{ $errors->has('cell_phone') ? ' has-error' : '' }}">
-                                            <label for="cell_phone" class="col-md-4 control-label text-right">Mobile
-                                                Number :
-                                                <span class="required"> ** </span></label>
-                                            <div class="col-md-6">
-                                                <input type="text" name="cell_phone" class="form-control"
-                                                       value="{{ old('cell_phone', isset($user) ? $user->cell_phone : '') }}"
-                                                       placeholder="cell phone number" pattern="^\+?[1-9][0-9]{6,14}$"
-                                                       maxlength="14">
-                                                @if ($errors->has('cell_phone'))
-                                                    <span class="help-block">
-                                        <strong>{{ $errors->first('cell_phone') }}</strong>
-                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row{{ $errors->has('email') ? ' has-error' : '' }}">
-                                            <label for="email"
-                                                   class="col-md-4 control-label text-right">Email : <span
-                                                        class="required"> ** </span></label>
-                                            <div class="col-md-6">
-                                                <input id="email" readonly type="email" class="form-control"
-                                                       name="email" value="{{ $user->email }}"
-                                                       onfocus="if (this.hasAttribute('readonly')) { this.removeAttribute('readonly');
-                    // fix for mobile safari to show virtual keyboard https://jsfiddle.net/danielsuess/n0scguv6/
-                                    this.blur();    this.focus();  }"/>
-                                                @if ($errors->has('email'))
-                                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mb-3">
-                                            <label class="col-md-4 control-label text-right"></label>
-                                            <div class="col-md-6">
-                                                <span class="help-block"><strong>** Mobile Number or Email any one is required</strong></span>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-group row mb-3{{ $errors->has('password') ? ' has-error' : '' }}">
-                                            <label for="password" class="col-md-4 control-label text-right">New Password
-                                                :
-                                                <span class="required"> * </span></label>
-                                            <div class="col-md-6">
-                                                <input id="password" type="password" class="form-control"
-                                                       name="password" placeholder="New Password"
-                                                       autocomplete="new-password">
-                                                @if ($errors->has('password'))
-                                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        {{--</div>--}}
-                                        <div class="form-group row mb-3{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                                            <label for="password_confirmation"
-                                                   class="col-md-4 control-label text-right">Confirm Password:
-                                                <span class="required"> * </span></label>
-                                            <div class="col-md-6">
-                                                <input id="password_confirmation" type="password" class="form-control"
-                                                       name="password_confirmation" placeholder="Confirm Password">
-                                                @if ($errors->has('password_confirmation'))
-                                                    <span
-                                                            class="help-block"><strong>{{ $errors->first('password_confirmation') }}</strong></span>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row mb-3{{ $errors->has('user_type_id') ? ' has-error' : '' }}">
-                                            <label class="control-label col-md-4 text-right">User type:
-                                                <span class="required"> * </span>
-                                            </label>
-                                            <div class="col-md-6">
-                                                <select name="user_type_id" class="form-control select2"
-                                                        style="width: 100%">
-                                                    @foreach($user_types as $user_type)
-                                                        <option
-                                                                value="{{$user_type->id}}" {{($user->user_type->id==$user_type->id)?'selected':''}}>
-                                                            {{ $user_type->title }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                @if ($errors->has('user_type_id'))
-                                                    <span class="help-block">
-                                                        <strong>{{ $errors->first('user_type_id') }}</strong>
+                                                        <strong>Country code is a must (e.g: +8801xxxxxxxxx)</strong>
                                                     </span>
-                                                @endif
+                                                    @if ($errors->has('cell_phone'))
+                                                        <span class="help-block">
+                                                            <strong>{{ $errors->first('cell_phone') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row mb-3{{ $errors->has('roles') ? 'has-error' : '' }}">
-                                            <label for="roles" class="col-sm-4 control-label text-right">Roles :<span
-                                                        class="required"> * </span></label>
-                                            <div class="col-sm-6">
-                                                <select name="roles[]" id="roles" class="form-control select2"
-                                                        multiple="multiple"
-                                                        required style="width: 100%">
-                                                    @foreach($roles as $id => $role)
-                                                        <option value="{{ $id }}" {{ (in_array($id, old('roles', [])) || isset($user) && $user->roles->contains($id)) ? 'selected' : '' }}>{{ $role }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @if($errors->has('roles'))
-                                                    <em class="invalid-feedback">
-                                                        {{ $errors->first('roles') }}
-                                                    </em>
-                                                @endif
-                                            </div>
-                                        </div>
 
-
-                                        <div class="form-group row">
-                                            <label class="col-md-4 control-label text-right">Web Access:<span
-                                                        class="required"> * </span></label>
-                                            <div class="mt-radio-inline col-md-6">
-                                                <label class="mt-radio">
-                                                    <input type="radio" name="web_access"
-                                                           value="1" {{ ($user->web_access=="1")? "checked" : "" }} >Yes
-                                                    <span></span>
-                                                </label>
-                                                <label class="mt-radio">
-                                                    <input type="radio" name="web_access"
-                                                           value="0" {{ ($user->web_access=="0")? "checked" : "" }} >No
-                                                    <span></span>
-                                                </label>
+                                            <div class="form-group row mb-3{{ $errors->has('email') ? ' has-error' : '' }}">
+                                                <label for="email"
+                                                    class="col-md-4 control-label text-right">Email : <span
+                                                            class="required"> ** </span></label>
+                                                <div class="col-md-6">
+                                                    <input id="email" readonly type="email" class="form-control"
+                                                        name="email" value="{{ $user->email }}"
+                                                        onfocus="if (this.hasAttribute('readonly')) { this.removeAttribute('readonly');
+                                                    this.blur();    this.focus();  }"/>
+                                                        @if ($errors->has('email'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('email') }}</strong>
+                                                    </span>
+                                                    @endif
+                                                </div>
                                             </div>
-                                        </div>
+
+                                            <div class="form-group row mb-3{{ $errors->has('password') ? ' has-error' : '' }}">
+                                                <label for="password" class="col-md-4 control-label text-right">New Password
+                                                    :</label>
+                                                <div class="col-md-6">
+                                                    <input id="password" type="password" class="form-control" name="password"
+                                                        placeholder="Enter New Password">
+                                                    @if ($errors->has('password'))
+                                                        <span class="help-block">
+                                                            <strong>{{ $errors->first('password') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-3{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
+                                                <label for="password_confirmation"
+                                                    class="col-md-4 control-label text-right">Confirm Password:
+                                                    </label>
+                                                <div class="col-md-6">
+                                                    <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" placeholder="Re-type New Password">
+                                                    @if ($errors->has('password_confirmation'))
+                                                        <span
+                                                                class="help-block"><strong>{{ $errors->first('password_confirmation') }}</strong></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-3">
+                                                <label class="col-md-4 control-label text-right"></label>
+                                                <div class="col-md-6">
+                                                    <span class="help-block"><strong>** Mobile Number or Email any one is required</strong></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-3{{ $errors->has('user_type_id') ? ' has-error' : '' }}">
+                                                <label class="control-label col-md-4 text-right">User type:
+                                                    <span class="required"> * </span>
+                                                </label>
+                                                <div class="col-md-6">
+                                                    <select name="user_type_id" class="form-control select2"
+                                                            style="width: 100%">
+                                                        @foreach($user_types as $user_type)
+                                                            <option
+                                                                    value="{{$user_type->id}}" {{($user->user_type->id==$user_type->id)?'selected':''}}>
+                                                                {{ $user_type->title }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('user_type_id'))
+                                                        <span class="help-block">
+                                                            <strong>{{ $errors->first('user_type_id') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3{{ $errors->has('roles') ? 'has-error' : '' }}">
+                                                <label for="roles" class="col-sm-4 control-label text-right">Roles :<span
+                                                            class="required"> * </span></label>
+                                                <div class="col-sm-6">
+                                                    <select name="roles[]" id="roles" class="form-control select2"
+                                                            multiple="multiple"
+                                                            required style="width: 100%">
+                                                        @foreach($roles as $id => $role)
+                                                            <option value="{{ $id }}" {{ (in_array($id, old('roles', [])) || isset($user) && $user->roles->contains($id)) ? 'selected' : '' }}>{{ $role }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if($errors->has('roles'))
+                                                        <em class="invalid-feedback">
+                                                            {{ $errors->first('roles') }}
+                                                        </em>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3">
+                                                <label class="col-md-4 control-label text-right">Web Access:<span
+                                                            class="required"> * </span></label>
+                                                <div class="mt-radio-inline col-md-6">
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="web_access"
+                                                            value="1" {{ ($user->web_access=="1")? "checked" : "" }} >Yes
+                                                        <span></span>
+                                                    </label>
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="web_access"
+                                                            value="0" {{ ($user->web_access=="0")? "checked" : "" }} >No
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        @if ($user->user_type_id != 1 && Auth::user()->user_type_id == 1)
+                                            <div class="form-group row mb-3{{ $errors->has('email') ? ' has-error' : '' }}">
+                                                <label for="email"
+                                                    class="col-md-4 control-label text-right">Email : <span
+                                                            class="required"> ** </span></label>
+                                                <div class="col-md-6">
+                                                    <input id="email" readonly type="email" class="form-control"
+                                                        name="email" value="{{ $user->email }}"
+                                                        onfocus="if (this.hasAttribute('readonly')) { this.removeAttribute('readonly');
+                                                    this.blur();    this.focus();  }"/>
+                                                        @if ($errors->has('email'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('email') }}</strong>
+                                                    </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3{{ $errors->has('cell_phone') ? ' has-error' : '' }}">
+                                                <label for="cell_phone"
+                                                    class="col-md-4 control-label text-right">Cell Phone : <span
+                                                            class="required"> ** </span></label>
+                                                <div class="col-md-6">
+                                                    <input id="cell_phone" type="text" class="form-control" name="cell_phone"
+                                                        value="{{ $user->cell_phone }}" placeholder="Mobile Number"
+                                                        pattern="^\+?[1-9][0-9]{6,14}$" maxlength="14"
+                                                        onfocus="if (this.hasAttribute('readonly')) { this.removeAttribute('readonly');
+                                                        this.blur();    this.focus();  }"/>
+                                                    {{-- Format indication message --}}
+                                                    <span class="help-block">
+                                                        <strong>Country code is a must (e.g: +8801xxxxxxxxx)</strong>
+                                                    </span>
+
+                                                    @if ($errors->has('cell_phone'))
+                                                        <span class="help-block">
+                                                                <strong>{{ $errors->first('cell_phone') }}</strong>
+                                                            </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-3{{ $errors->has('password') ? ' has-error' : '' }}">
+                                                <label for="password" class="col-md-4 control-label text-right">New Password
+                                                    :</label>
+                                                <div class="col-md-6">
+                                                    <input id="password" type="password" class="form-control" name="password"
+                                                        placeholder="Enter New Password">
+                                                    @if ($errors->has('password'))
+                                                        <span class="help-block">
+                                                            <strong>{{ $errors->first('password') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-3{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
+                                                <label for="password_confirmation"
+                                                    class="col-md-4 control-label text-right">Confirm Password:
+                                                    </label>
+                                                <div class="col-md-6">
+                                                    <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" placeholder="Re-type New Password">
+                                                    @if ($errors->has('password_confirmation'))
+                                                        <span
+                                                                class="help-block"><strong>{{ $errors->first('password_confirmation') }}</strong></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-3{{ $errors->has('user_type_id') ? ' has-error' : '' }}">
+                                                <label class="control-label col-md-4 text-right">User type:
+                                                    <span class="required"> * </span>
+                                                </label>
+                                                <div class="col-md-6">
+                                                    <select name="user_type_id" class="form-control select2"
+                                                            style="width: 100%">
+                                                        @foreach($user_types as $user_type)
+                                                            <option
+                                                                    value="{{$user_type->id}}" {{($user->user_type->id==$user_type->id)?'selected':''}}>
+                                                                {{ $user_type->title }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('user_type_id'))
+                                                        <span class="help-block">
+                                                            <strong>{{ $errors->first('user_type_id') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3{{ $errors->has('roles') ? 'has-error' : '' }}">
+                                                <label for="roles" class="col-sm-4 control-label text-right">Roles :<span
+                                                            class="required"> * </span></label>
+                                                <div class="col-sm-6">
+                                                    <select name="roles[]" id="roles" class="form-control select2"
+                                                            multiple="multiple"
+                                                            required style="width: 100%">
+                                                        @foreach($roles as $id => $role)
+                                                            <option value="{{ $id }}" {{ (in_array($id, old('roles', [])) || isset($user) && $user->roles->contains($id)) ? 'selected' : '' }}>{{ $role }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if($errors->has('roles'))
+                                                        <em class="invalid-feedback">
+                                                            {{ $errors->first('roles') }}
+                                                        </em>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3">
+                                                <label class="col-md-4 control-label text-right">Web Access:<span
+                                                            class="required"> * </span></label>
+                                                <div class="mt-radio-inline col-md-6">
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="web_access"
+                                                            value="1" {{ ($user->web_access=="1")? "checked" : "" }} >Yes
+                                                        <span></span>
+                                                    </label>
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="web_access"
+                                                            value="0" {{ ($user->web_access=="0")? "checked" : "" }} >No
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endif
+
                                     </div>
 
                                     {{--<div class="card-footer">--}}

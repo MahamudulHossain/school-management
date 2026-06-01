@@ -32,7 +32,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'cell_phone';
+        $input = $request->username;
+        if (filter_var($input, FILTER_VALIDATE_EMAIL)) {
+            $fieldType = 'email';
+        } elseif (preg_match('/^\+\d{13}$/', $input)) { // Check for international phone format
+            $fieldType = 'cell_phone';
+        } else {
+            $fieldType = 'personnel_id';
+        }
 
         if (auth()->attempt(array($fieldType => $request->username, 'password' => $request->password))) {
 
@@ -46,13 +53,17 @@ class AuthenticatedSessionController extends Controller
             // Regenerate session after successful login
             $request->session()->regenerate();
 
+            // Store default academic year in session
+            $acdemic_year = DB::table('academic_years')->orderBy('id','desc')->pluck('title', 'id')->first();
+            session()->put('acad_year', $acdemic_year);
+
 
             // Redirect to the home page after successful login
             return redirect()->intended(RouteServiceProvider::HOME);
         } else {
             // Return error if login fails
             return redirect()->route('login')
-                ->withErrors(['global' => "Cell-Phone/Email-Address or Password are wrong."]);
+                ->withErrors(['global' => "Cell-Phone/Email-Address/P_id or Password are wrong."]);
         }
     }
 

@@ -3,7 +3,6 @@
     <div class="card card-primary card-outline">
         <div class="card-body box-profile">
             <div class="text-center">
-
                 @if($user->imageprofile->image=='default_image.png' && $user->profile->gender=='Male')
                     <img src="{!! asset( 'storage/images/avatar_male'.'.jpg'. '?'. 'time='. time()) !!}"
                          class="profile-user-img img-fluid img-circle">
@@ -12,8 +11,11 @@
                             src="{!! asset( 'storage/images/avatar_female'.'.jpg'. '?'. 'time='. time()) !!}"
                             class="profile-user-img img-fluid img-circle">
                 @elseif($user->imageprofile->image=='default_image.png' && Auth::user()->profile->gender==null)
-                    <img src="{!! asset('storage/images/eisLogoTFoutline.png')!!}"
+                    <img src="{!! asset('storage/images/avatar_male.jpg')!!}"
                          class="profile-user-img img-fluid img-circle" alt="User Image">
+                @elseif ($user->imageprofile->image=='default_image.png')
+                    <img src="{!! asset( 'storage/images/avatar_male'.'.jpg'. '?'. 'time='. time()) !!}"
+                         class="profile-user-img img-fluid img-circle">
                 @else
                     <img
                             src="{!! asset( 'storage/image_profile/'. $user->imageprofile->image. '?'. 'time='. time()) !!}"
@@ -21,8 +23,18 @@
                 @endif
 
             </div>
+            <h3 class="profile-username text-center">
+                @if(isset($user_name) && isset($user_name->first_name) && isset($user_name->middle_name) && isset($user_name->last_name))
+                    {{ $user_name->first_name.' '.$user_name->middle_name.' '.$user_name->last_name}}
+                @elseif (isset($user_name) && isset($user_name->first_name) && isset($user_name->middle_name))
+                    {{ $user_name->first_name.' '.$user_name->middle_name}}
+                @elseif(isset($user_name) && isset($user_name->first_name))
+                    {{ $user_name->first_name}}
+                @else
+                    {{$user->name ? $user->name : '' }}
+                @endif
 
-            <h3 class="profile-username text-center">{{$user->name}}</h3>
+            </h3>
             <h6 class="text-center">{{$user->user_type->title}}</h6>
             <p class="text-muted text-center">{{$user->email}}</p>
             <p class="text-muted text-center">
@@ -42,10 +54,17 @@
     </div>
     <!-- /.card -->
     @if(Auth::user()->id==$user->id)
-        <div class="card card-primary">
+        <div class="card card-primary collapsed-card">
             <div class="card-header">
                 <h3 class="card-title">Update Password</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                    </button>
+                </div>
             </div>
+
             <!-- /.card-header -->
             <div class="card-body">
                 <form action="{{ route('password_update', $user->id) }}" class="form-horizontal"

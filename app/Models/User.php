@@ -70,7 +70,7 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'role_users');
+        return $this->belongsToMany(Role::class, 'role_users')->with('permissions');;
     }
     public function imageprofile()
     {
@@ -83,5 +83,29 @@ class User extends Authenticatable
     public function profile()
     {
         return $this->hasOne('App\Models\Profile');
+    }
+    public function student()
+    {
+        return $this->hasOne('App\Models\Student');
+    }
+    public function teacher()
+    {
+        return $this->hasOne('App\Models\Teacher');
+    }
+    public function employee()
+    {
+        return $this->hasOne('App\Models\Employee');
+    }
+    public function guardian()
+    {
+        return $this->hasOne('App\Models\Guardian');
+    }
+    public function contact()
+    {
+        return $this->hasOne('App\Models\Contact');
+    }
+    public function student_academic_histories()
+    {
+        return $this->hasMany('App\Models\StudentAcademicHistory');
     }
 }
