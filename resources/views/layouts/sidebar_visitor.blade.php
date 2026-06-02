@@ -11,7 +11,7 @@
             /> --}}
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light">{{ config('app.name', 'EISL') }}</span>
+            <span class="brand-text fw-light">{{ config('app.name', 'Laravel') }}</span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
@@ -35,7 +35,8 @@
                     <p>Dashboard</p>
                 </a>
             </li>
-
+{{-- @dd(Auth::user()->can('PortfolioTagManagement')) --}}
+{{-- @dd(Auth::user()->can('FrontendSettings')) --}}
             <li class="nav-item @yield('frontend_mo')">
                 <a href="#" class="nav-link @yield('frontend')">
                     <i class="nav-icon fa fa-eye"></i>
