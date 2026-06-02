@@ -306,7 +306,7 @@
                             </a>
                         </li>
                     @endcan
-                    @can('TeacherAccess')
+                    @can('TeacherPresenceUpdate')
                         <li class="nav-item">
                             <a href="{{ url('teacher_presence') }}" class="nav-link @yield('teacher_manage_attendance')">
                                 <i class="nav-icon bi bi-circle"></i>

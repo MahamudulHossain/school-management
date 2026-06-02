@@ -57,7 +57,7 @@ class TeacherPresenceController extends Controller
     }
 
     public function store(Request $request){
-        abort_if(Gate::denies('TeacherPresenceCreate'), redirect('error'));
+        abort_if(Gate::denies('TeacherPresenceSave'), redirect('error'));
         $this->validate($request, [
             'date' => 'required|date',
         ]);
@@ -94,7 +94,7 @@ class TeacherPresenceController extends Controller
 
     public function show($date)
     {
-        abort_if(Gate::denies('TeacherPresenceCreate'), redirect('error'));
+        abort_if(Gate::denies('TeacherPresenceUpdate'), redirect('error'));
         if(Auth::user()->user_type_id == 3){ // Teacher
             $date_presence = TeacherPresence::whereHas('user', function($query) {
                             $query->where('id', Auth::user()->id);
@@ -112,7 +112,7 @@ class TeacherPresenceController extends Controller
     }
 
     public function update(Request $request, $date){
-        abort_if(Gate::denies('TeacherPresenceUpdate'), redirect('error'));
+        abort_if(Gate::denies('TeacherPresenceUpdateSave'), redirect('error'));
         foreach ($request['user_id'] as $sid) {
             $stuid[] = $sid ;        }
         foreach ($request['in_time'] as $it) {
