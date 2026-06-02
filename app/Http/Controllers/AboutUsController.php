@@ -27,7 +27,7 @@ class AboutUsController extends Controller
 
     public function edit(string $id)
     {
-        abort_if(Gate::denies('FrontendSettings'), redirect('error'));
+        abort_if(Gate::denies('editAboutUs'), redirect('error'));
         $data = AboutUs::findOrFail($id);
         return view('frontsettings.about_us.edit', compact('data'));
     }
@@ -35,7 +35,7 @@ class AboutUsController extends Controller
 
     public function update(Request $request, string $id)
     {
-        abort_if(Gate::denies('FrontendSettings'), redirect('error'));
+        abort_if(Gate::denies('editAboutUs'), redirect('error'));
         $aboutUs = AboutUs::findOrFail($id);
 
         $this->validate($request, [

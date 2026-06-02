@@ -67,19 +67,23 @@
                                 {{ $portfolio->tag->title ?? '' }}
                             </td>
                             <td>
-                                <a href="{{ url('portfolio/' . $portfolio->id . '/edit') }}" class="btn btn-info btn-sm" title="Edit"><span class="far fa-edit" aria-hidden="true"></span></a>
+                                @can('editPortfolio')
+                                    <a href="{{ url('portfolio/' . $portfolio->id . '/edit') }}" class="btn btn-info btn-sm" title="Edit"><span class="far fa-edit" aria-hidden="true"></span></a>
+                                @endcan
 
-                                <form method="POST" action="{{ url('portfolio/' . $portfolio->id) }}" style="display:inline">
-                                    @csrf
-                                    @method('DELETE')
+                                @can('deletePortfolio')
+                                    <form method="POST" action="{{ url('portfolio/' . $portfolio->id) }}" style="display:inline">
+                                        @csrf
+                                        @method('DELETE')
 
-                                    <button type="submit"
-                                        class="btn btn-danger btn-sm"
-                                        title="Delete"
-                                        onclick="return confirm('Confirm delete?')">
-                                        <span class="far fa-trash-alt" aria-hidden="true" title="Delete"></span>
-                                    </button>
-                                </form>
+                                        <button type="submit"
+                                            class="btn btn-danger btn-sm"
+                                            title="Delete"
+                                            onclick="return confirm('Confirm delete?')">
+                                            <span class="far fa-trash-alt" aria-hidden="true" title="Delete"></span>
+                                        </button>
+                                    </form>
+                                @endcan
 
                             </td>
 

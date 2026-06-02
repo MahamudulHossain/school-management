@@ -73,7 +73,9 @@
                                     {{ $data->goal ?? '' }}
                                 </td>
                                 <td class="noprint">
-                                    <a href="{{ url('about-us/' . $data->id . '/edit') }}" class="btn btn-info btn-sm" title="Edit"><span class="far fa-edit" aria-hidden="true"></span></a>
+                                    @can('editAboutUs')
+                                        <a href="{{ url('about-us/' . $data->id . '/edit') }}" class="btn btn-info btn-sm" title="Edit"><span class="far fa-edit" aria-hidden="true"></span></a>
+                                    @endcan
                                 </td>
 
                             </tr>

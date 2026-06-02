@@ -27,14 +27,14 @@ class PortfolioController extends Controller
 
     public function create()
     {
-        abort_if(Gate::denies('FrontendSettings'), redirect('error'));
+        abort_if(Gate::denies('addPortfolio'), redirect('error'));
         $tags = PortfolioTag::where('status', 'active')->get();
         return view('frontsettings.portfolio.create', compact('tags'));
     }
 
     public function store(Request $request)
     {
-        abort_if(Gate::denies('FrontendSettings'), redirect('error'));
+        abort_if(Gate::denies('addPortfolio'), redirect('error'));
         $request->validate([
             'portfolio_tag_id' => 'required|exists:portfolio_tags,id',
             'image' => 'mimes:png,jpeg,jpg,bmp | required | max:1024 | dimensions:width=800,height=600',
@@ -59,7 +59,7 @@ class PortfolioController extends Controller
 
     public function edit(Portfolio $portfolio)
     {
-        abort_if(Gate::denies('FrontendSettings'), redirect('error'));
+        abort_if(Gate::denies('editPortfolio'), redirect('error'));
         $tags = PortfolioTag::where('status', 'active')->get();
         return view('frontsettings.portfolio.edit', compact('portfolio', 'tags'));
     }
@@ -67,7 +67,7 @@ class PortfolioController extends Controller
 
     public function update(Request $request, Portfolio $portfolio)
     {
-        abort_if(Gate::denies('FrontendSettings'), redirect('error'));
+        abort_if(Gate::denies('editPortfolio'), redirect('error'));
         $request->validate([
             'portfolio_tag_id' => 'required|exists:portfolio_tags,id',
             'image' => 'mimes:png,jpeg,jpg,bmp | max:1024 | dimensions:width=800,height=600',
@@ -99,7 +99,7 @@ class PortfolioController extends Controller
 
     public function destroy(Portfolio $portfolio)
     {
-        abort_if(Gate::denies('FrontendSettings'), redirect('error'));
+        abort_if(Gate::denies('deletePortfolio'), redirect('error'));
         // Delete image
         if ($portfolio->image && Storage::disk('public')->exists('front/portfolio/' . $portfolio->image)) {
             Storage::disk('public')->delete('front/portfolio/' . $portfolio->image);

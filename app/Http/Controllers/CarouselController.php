@@ -24,12 +24,12 @@ class CarouselController extends Controller
     }
 
     public function create(){
-        abort_if(Gate::denies('FrontendSettings'), redirect('error'));
+        abort_if(Gate::denies('addCarousel'), redirect('error'));
         return view('frontsettings.carousel.create');
     }
 
     public function store(Request $request){
-        abort_if(Gate::denies('FrontendSettings'), redirect('error'));
+        abort_if(Gate::denies('addCarousel'), redirect('error'));
         $this->validate($request, [
             'image' => 'mimes:png,jpeg,jpg,bmp | required | max:1024 | dimensions:width=1982,height=954',
             'serial' => 'required|min:1'
@@ -52,14 +52,14 @@ class CarouselController extends Controller
 
     public function edit($id)
     {
-        abort_if(Gate::denies('FrontendSettings'), redirect('error'));
+        abort_if(Gate::denies('editCarousel'), redirect('error'));
         $frontCarousel = FrontCarousel::findOrFail($id);
         return view('frontsettings.carousel.edit', compact('frontCarousel'));
     }
 
     public function update(Request $request, $id)
     {
-        abort_if(Gate::denies('FrontendSettings'), redirect('error'));
+        abort_if(Gate::denies('editCarousel'), redirect('error'));
         $this->validate($request, [
             'image' => 'mimes:png,jpeg,jpg,bmp | max:1024 | dimensions:width=1982,height=954',
             'serial' => 'required|min:1'
@@ -89,7 +89,7 @@ class CarouselController extends Controller
 
     public function destroy($id)
     {
-        abort_if(Gate::denies('FrontendSettings'), redirect('error'));
+        abort_if(Gate::denies('deleteCarousel'), redirect('error'));
         $frontCarousel = FrontCarousel::findOrFail($id);
         // delete old image
         if (Storage::disk('public')->exists('front/carousel/' . $frontCarousel->image)) {
