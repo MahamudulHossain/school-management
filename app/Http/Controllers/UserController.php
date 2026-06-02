@@ -303,7 +303,8 @@ class UserController extends Controller
                                 ])->where('user_type_id',2);
             $students = $students->whereIn('id',$userIds)->orderBy('id','desc')->get();
             $user_type = 'Guardian';
-        }
+        }else if ($user->user_type_id == 6)
+            $user_type = 'Visitor';
 
         $title_date_range=$user->name;
         return view('user.show_sc', compact('user','user_type','title_date_range','user_name','stu_aca_his','attachedGuardian','attachedAttendant','attendants','attendantInfo','studentLedger','students'));

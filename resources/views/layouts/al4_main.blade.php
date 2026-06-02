@@ -166,17 +166,19 @@
 
     <!-- Main Sidebar Container -->
     {{-- @dd(Auth::user()->user_type_id) --}}
-@if(Auth::user()->user_type_id == 1)
-    @include('layouts.sidebar')
-@elseif (Auth::user()->user_type_id == 2)
-    @include('layouts.sidebar_student')
-@elseif (Auth::user()->user_type_id == 3)
-    @include('layouts.sidebar_teacher')
-@elseif (Auth::user()->user_type_id == 4)
-    @include('layouts.sidebar_employee')
-@elseif (Auth::user()->user_type_id == 5)
-    @include('layouts.sidebar_guardian')
-@endif
+    @if(Auth::user()->user_type_id == 1)
+        @include('layouts.sidebar')
+    @elseif (Auth::user()->user_type_id == 2)
+        @include('layouts.sidebar_student')
+    @elseif (Auth::user()->user_type_id == 3)
+        @include('layouts.sidebar_teacher')
+    @elseif (Auth::user()->user_type_id == 4)
+        @include('layouts.sidebar_employee')
+    @elseif (Auth::user()->user_type_id == 5)
+        @include('layouts.sidebar_guardian')
+    @elseif (Auth::user()->user_type_id == 6)
+        @include('layouts.sidebar_visitor')
+    @endif
 
 
     <main class="app-main" id="main" tabindex="-1">
