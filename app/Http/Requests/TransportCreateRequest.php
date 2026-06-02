@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class ProfileUpdateRequest extends FormRequest
+class TransportCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,11 +22,12 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $profile = $this->route('profile');
         return [
-            'gender' => 'required',
-            'joining_date' => 'required',
-            'nid' => 'nullable|unique:profiles,nid,'. $profile->id,
+            'title' => 'required|unique:transports,title',
+            'route_info' => 'required',
+            'vehicle_info' => 'required',
+            'driver_info'=>'required',
+            'fare'=>'required|min:1',
         ];
     }
 }

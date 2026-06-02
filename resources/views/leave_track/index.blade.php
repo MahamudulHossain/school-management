@@ -21,14 +21,14 @@
     <div class="card card-tabs">
         <div class="card-header p-2 pt-1">
             <ul class="nav nav-pills">
-                @can('ManageTeacherLeave')
+                @canany(['ManageTeacherLeave', 'Visitor'])
                 <li class="nav-item"><a class="nav-link {{ $activeTab == 'teacher' ? 'active': '' }}" href="#teacher" data-toggle="tab">Teacher Leave</a>
                 </li>
                 @endcan
-                @can('ManageEmployeeLeave')
+                @canany(['ManageEmployeeLeave','Visitor'])
                     <li class="nav-item"><a class="nav-link" href="#staff" data-toggle="tab">Employee Leave</a></li>
                 @endcan
-                @can('ManageStudentLeave')
+                @canany(['ManageStudentLeave','Visitor'])
                 <li class="nav-item"><a class="nav-link {{ $activeTab == 'student' ? 'active': '' }}" href="#student" data-toggle="tab">Student Leave</a>
                 </li>
                 @endcan
@@ -36,7 +36,7 @@
         </div>
         <div class="card-body">
             <div class="tab-content">
-                @can('ManageTeacherLeave')
+                @canany(['ManageTeacherLeave', 'Visitor'])
                 <div class="tab-pane {{ $activeTab == 'teacher' ? 'active': '' }}"  id="teacher">
                     <div class="p-2">
                         <div class="bg-info p-2 mb-3">
@@ -93,22 +93,27 @@
                                                 @endif
                                             </td>
                                             <td class="noprint">
-                                                @if($leave->status == 'applied' || in_array(Auth::user()->user_type_id,[1,4]))
-                                                <a href="{{ url('leave-track/' . $leave->id . '/edit') }}" class="btn btn-info btn-sm" title="Edit"><span class="far fa-edit" aria-hidden="true"></span></a>
-                                                @endif
-                                                @if(Auth::user()->can('DeleteLeave') || $leave->status == 'applied')
-                                                <form method="POST" action="{{ url('leave-track/' . $leave->id) }}" style="display:inline">
-                                                    @csrf
-                                                    @method('DELETE')
+                                                @can('ManageLeaveEdit')
+                                                    @if($leave->status == 'applied' || in_array(Auth::user()->user_type_id,[1,4]))
+                                                    <a href="{{ url('leave-track/' . $leave->id . '/edit') }}" class="btn btn-info btn-sm" title="Edit"><span class="far fa-edit" aria-hidden="true"></span></a>
+                                                    @endif
+                                                @endcan
 
-                                                    <button type="submit"
-                                                        class="btn btn-danger btn-sm"
-                                                        title="Delete"
-                                                        onclick="return confirm('Confirm delete?')">
-                                                        <span class="far fa-trash-alt" aria-hidden="true" title="Delete"></span>
-                                                    </button>
-                                                </form>
-                                                @endif
+                                                @can('ManageLeaveDelete')
+                                                    @if(Auth::user()->can('DeleteLeave') || $leave->status == 'applied')
+                                                        <form method="POST" action="{{ url('leave-track/' . $leave->id) }}" style="display:inline">
+                                                            @csrf
+                                                            @method('DELETE')
+
+                                                            <button type="submit"
+                                                                class="btn btn-danger btn-sm"
+                                                                title="Delete"
+                                                                onclick="return confirm('Confirm delete?')">
+                                                                <span class="far fa-trash-alt" aria-hidden="true" title="Delete"></span>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                @endcan
                                             </td>
                                         </tr>
                                         @endif
@@ -120,7 +125,7 @@
                     </div>
                 </div>
                 @endcan
-                @can('ManageEmployeeLeave')
+                @canany(['ManageEmployeeLeave','Visitor'])
                     <div class="tab-pane"  id="staff">
                         <div class="p-2">
                             <div class="bg-info p-2 mb-3">
@@ -177,22 +182,27 @@
                                                         @endif
                                                     </td>
                                                     <td class="noprint">
-                                                        @if($leave->status == 'applied' || in_array(Auth::user()->user_type_id,[1,4]))
-                                                        <a href="{{ url('leave-track/' . $leave->id . '/edit') }}" class="btn btn-info btn-sm" title="Edit"><span class="far fa-edit" aria-hidden="true"></span></a>
-                                                        @endif
-                                                        @if(Auth::user()->can('DeleteLeave') || $leave->status == 'applied')
-                                                        <form method="POST" action="{{ url('leave-track/' . $leave->id) }}" style="display:inline">
-                                                            @csrf
-                                                            @method('DELETE')
+                                                        @can('ManageLeaveEdit')
+                                                            @if($leave->status == 'applied' || in_array(Auth::user()->user_type_id,[1,4]))
+                                                            <a href="{{ url('leave-track/' . $leave->id . '/edit') }}" class="btn btn-info btn-sm" title="Edit"><span class="far fa-edit" aria-hidden="true"></span></a>
+                                                            @endif
+                                                        @endcan
 
-                                                            <button type="submit"
-                                                                class="btn btn-danger btn-sm"
-                                                                title="Delete"
-                                                                onclick="return confirm('Confirm delete?')">
-                                                                <span class="far fa-trash-alt" aria-hidden="true" title="Delete"></span>
-                                                            </button>
-                                                        </form>
-                                                        @endif
+                                                        @can('ManageLeaveDelete')
+                                                            @if(Auth::user()->can('DeleteLeave') || $leave->status == 'applied')
+                                                            <form method="POST" action="{{ url('leave-track/' . $leave->id) }}" style="display:inline">
+                                                                @csrf
+                                                                @method('DELETE')
+
+                                                                <button type="submit"
+                                                                    class="btn btn-danger btn-sm"
+                                                                    title="Delete"
+                                                                    onclick="return confirm('Confirm delete?')">
+                                                                    <span class="far fa-trash-alt" aria-hidden="true" title="Delete"></span>
+                                                                </button>
+                                                            </form>
+                                                            @endif
+                                                        @endcan
                                                     </td>
                                                 </tr>
                                             @endif
@@ -204,7 +214,7 @@
                         </div>
                     </div>
                 @endcan
-                @can('ManageStudentLeave')
+                @canany(['ManageStudentLeave','Visitor'])
                 <div class="tab-pane {{ $activeTab == 'student' ? 'active': '' }}" id="student">
                     <div class="p-2">
                         <div class="bg-info p-2 mb-3">
@@ -275,22 +285,27 @@
                                                     @endif
                                                 </td>
                                                 <td class="noprint">
-                                                    @if($leave->status == 'applied' || in_array(Auth::user()->user_type_id,[1,4])) {{-- only admin and employee --}}
-                                                    <a href="{{ url('leave-track/' . $leave->id . '/edit') }}" class="btn btn-info btn-sm" title="Edit"><span class="far fa-edit" aria-hidden="true"></span></a>
-                                                    @endif
-                                                    @if(Auth::user()->can('DeleteLeave') || $leave->status == 'applied')
-                                                    <form method="POST" action="{{ url('leave-track/' . $leave->id) }}" style="display:inline">
-                                                        @csrf
-                                                        @method('DELETE')
+                                                    @can('ManageLeaveEdit')
+                                                        @if($leave->status == 'applied' || in_array(Auth::user()->user_type_id,[1,4])) {{-- only admin and employee --}}
+                                                        <a href="{{ url('leave-track/' . $leave->id . '/edit') }}" class="btn btn-info btn-sm" title="Edit"><span class="far fa-edit" aria-hidden="true"></span></a>
+                                                        @endif
+                                                    @endcan
 
-                                                        <button type="submit"
-                                                            class="btn btn-danger btn-sm"
-                                                            title="Delete"
-                                                            onclick="return confirm('Confirm delete?')">
-                                                            <span class="far fa-trash-alt" aria-hidden="true" title="Delete"></span>
-                                                        </button>
-                                                    </form>
-                                                    @endif
+                                                    @can('ManageLeaveDelete')
+                                                        @if(Auth::user()->can('DeleteLeave') || $leave->status == 'applied')
+                                                        <form method="POST" action="{{ url('leave-track/' . $leave->id) }}" style="display:inline">
+                                                            @csrf
+                                                            @method('DELETE')
+
+                                                            <button type="submit"
+                                                                class="btn btn-danger btn-sm"
+                                                                title="Delete"
+                                                                onclick="return confirm('Confirm delete?')">
+                                                                <span class="far fa-trash-alt" aria-hidden="true" title="Delete"></span>
+                                                            </button>
+                                                        </form>
+                                                        @endif
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endif

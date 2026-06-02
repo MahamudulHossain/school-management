@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProfileUpdateRequest extends FormRequest
+class GradingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,11 +21,11 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $profile = $this->route('profile');
         return [
-            'gender' => 'required',
-            'joining_date' => 'required',
-            'nid' => 'nullable|unique:profiles,nid,'. $profile->id,
+            'letter_grade' => 'required',
+            'grade_point' => 'required',
+            'starting_marks' => 'required',
+            'ending_marks'=>'required|gt:starting_marks',
         ];
     }
 }

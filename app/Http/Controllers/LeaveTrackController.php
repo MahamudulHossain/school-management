@@ -135,7 +135,7 @@ class LeaveTrackController extends Controller
     }
 
     public  function store(LeaveTrackCreateRequest $request){
-        abort_if(Gate::denies('CreateLeave'), redirect('error'));
+        abort_if(Gate::denies('CreateLeaveSave'), redirect('error'));
         LeaveTrack::create($request->all());
         \Session::flash('flash_message','Successfully Added');
         return redirect('leave-track');
@@ -143,7 +143,7 @@ class LeaveTrackController extends Controller
 
     public function edit(LeaveTrack $leave_track)
     {
-        abort_if(Gate::denies('ManageLeave'), redirect('error'));
+        abort_if(Gate::denies('ManageLeaveEdit'), redirect('error'));
         if($leave_track->status != 'applied' && in_array(Auth::user()->user_type_id,[2,5])){ // Student and Guardina
             return redirect('/error');
         }
@@ -156,7 +156,7 @@ class LeaveTrackController extends Controller
 
     public function update(LeaveTrackCreateRequest $request, LeaveTrack $leave_track)
     {
-        abort_if(Gate::denies('ManageLeave'), redirect('error'));
+        abort_if(Gate::denies('ManageLeaveEdit'), redirect('error'));
         $leave_track->update($request->all());
         \Session::flash('flash_message','Successfully Updated');
         return redirect('leave-track');
@@ -164,6 +164,7 @@ class LeaveTrackController extends Controller
 
     public function destroy(LeaveTrack $leave_track)
     {
+        abort_if(Gate::denies('ManageLeaveDelete'), redirect('error'));
         $leave_track->delete();
         \Session::flash('flash_message','Successfully Deleted');
         return redirect('leave-track');

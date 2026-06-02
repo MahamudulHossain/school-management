@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProfileUpdateRequest extends FormRequest
+class LeaveTrackCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,11 +21,14 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $profile = $this->route('profile');
+        // dd($this->all());
         return [
-            'gender' => 'required',
-            'joining_date' => 'required',
-            'nid' => 'nullable|unique:profiles,nid,'. $profile->id,
+            'start_date' => 'required',
+            'start_portion' => 'required',
+            'end_date' => 'required',
+            'end_portion' => 'required',
+            'leave_type_id' => 'required',
+            'personnel_id' => 'required',
         ];
     }
 }
