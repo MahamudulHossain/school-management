@@ -140,7 +140,8 @@ class ExamController extends Controller
 
     public function exam_report()
     {
-        abort_if(Gate::denies('ManageExamReport'), redirect('error'));
+        // abort_if(Gate::denies('ManageExamReport'), redirect('error'));
+        abort_if(Gate::none(['ManageExamReport', 'Visitor']), 403, 'Unauthorized');
 
         $school_classes= DB::table('school_classes')->orderBy('numeric_no','asc')->pluck('class_name','id');
         $school_sections= DB::table('school_sections')->orderBy('priority_no','asc')->pluck('section_name','id');

@@ -618,7 +618,7 @@
                             </a>
                         </li>
                     @endcan
-                    @can('ManageExamReport')
+                    @canany(['ManageExamReport','Visitor'])
                         <li class="nav-item">
                             <a href="{{ url('exam-report') }}" class="nav-link @yield('manage_exam_report')">
                                 <i class="nav-icon bi bi-circle"></i>
