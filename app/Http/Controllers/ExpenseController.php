@@ -74,10 +74,13 @@ class ExpenseController extends Controller
     }
 
     public function balance_report_daterange(){
+        // abort_if(Gate::denies('ExpenseBalanceReport'), redirect('error'));
+        abort_if(Gate::none(['ExpenseBalanceReport', 'Visitor']), 403, 'Unauthorized');
         return view('expense.balance_report_daterange');
     }
 
     public function accounting_balance_report(Request $request){
+        abort_if(Gate::none(['ExpenseBalanceReport', 'Visitor']), 403, 'Unauthorized');
 
         $start_date = $request->start_date;
         $end_date = $request->end_date;

@@ -706,7 +706,7 @@
                             </a>
                         </li>
                     @endcan
-                    @can('ExpenseBalanceReport')
+                    @canany(['ExpenseBalanceReport','Visitor'])
                         <li class="nav-item">
                             <a href="{{ url('balance-report-daterange') }}" class="nav-link @yield('balance_report')">
                                 <i class="nav-icon bi bi-circle"></i>
