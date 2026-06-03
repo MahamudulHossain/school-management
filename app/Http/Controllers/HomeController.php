@@ -60,14 +60,14 @@ class HomeController extends Controller
             $notice = Notice::orderBy('created_at', 'desc')->get()->take(15);
         }
 
-        if ($user->user_type_id == 1) {
+        if (in_array($user->user_type_id,[1,6])) {
             if(session()->get('acad_year') != 'all')
                 $currentAcademicYearId = AcademicYear::where('title',session()->get('acad_year'))->first()->id;
             else
                 $currentAcademicYearId = AcademicYear::pluck('id')->toArray();
             $newAdmissionCount = $this->newAdmissionCount($currentAcademicYearId);
             $genderWiseNewAdmission = $this->calculateGenderWiseStudent($currentAcademicYearId);
-            
+
             return view('dashboard.admin',compact('notice','totalStudents','totalTeachers','totalEmployees','newAdmissionCount','genderWiseNewAdmission'));
         }elseif($user->user_type_id == 2){
             $currentMonthAttendance = $this->currentMonthAttendance($user);
