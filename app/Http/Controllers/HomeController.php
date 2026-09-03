@@ -67,8 +67,9 @@ class HomeController extends Controller
                 $currentAcademicYearId = AcademicYear::pluck('id')->toArray();
             $newAdmissionCount = $this->newAdmissionCount($currentAcademicYearId);
             $genderWiseNewAdmission = $this->calculateGenderWiseStudent($currentAcademicYearId);
+            $userTitle = $user->user_type_id == 1 ? 'Admin' : 'Visitor';
 
-            return view('dashboard.admin',compact('notice','totalStudents','totalTeachers','totalEmployees','newAdmissionCount','genderWiseNewAdmission'));
+            return view('dashboard.admin',compact('notice','totalStudents','totalTeachers','totalEmployees','newAdmissionCount','genderWiseNewAdmission','userTitle'));
         }elseif($user->user_type_id == 2){
             $currentMonthAttendance = $this->currentMonthAttendance($user);
             return view('dashboard.student',compact('notice','currentMonthAttendance'));
